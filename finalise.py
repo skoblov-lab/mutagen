@@ -88,14 +88,12 @@ def optval(validator: Callable[[A], bool], message: str, ctx, param: str,
               type=click.Path(exists=False, dir_okay=False, resolve_path=True),
               callback=F(optval, lambda v: not os.path.exists(v), 'output exists'))
 def finalise(input, associations, output):
-    print('hello')
     try:
         with open(associations) as buffer:
             mappings = json.load(buffer)
     except json.JSONDecodeError:
         raise click.BadParameter("can't parse association mapping")
     try:
-        print('hello')
         with open(input) as buffer:
             records = parser.parse(parser.cleanup(buffer))
     except (ValueError, AttributeError):
