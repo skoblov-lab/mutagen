@@ -157,7 +157,7 @@ def write(records: Iterable[Record]) -> Iterable[str]:
 
     def write_eff(eff: Effect) -> str:
         assoc = ';'.join(eff.associations)
-        effect = '|'.join([eff.cls, eff.level, eff.target, assoc])
+        effect = '|'.join([val or '' for val in eff[:3]] + [assoc])
         return indent(3, f">> {effect}")
 
     return (F(map, write_record) >> chain.from_iterable)(records)
