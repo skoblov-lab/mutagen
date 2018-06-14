@@ -23,4 +23,10 @@ Q9Y3I1
 	<2> V|252-253|E Abolishes interaction with PSMF1.
 		[1] Abolishes interaction with PSMF1
 			>> INT|--|PSMF1|
-
+Q9Y3I1
+	<1> T|21-22|M Impairs interaction with PARK2.
+		[1] Impairs interaction with PARK2
+			>> INT||
+	<2> V|252-253|E Abolishes interaction with PSMF1.
+		[1] Abolishes interaction with PSMF1
+			>> INT||PSMF1|

@@ -9,17 +9,31 @@
 import os
 import re
 import json
-from typing import TypeVar, Callable, Mapping
+from typing import TypeVar, Callable, Mapping, Union
 
 import click
 from fn import F
 
 from mutagen import parser
 
-association = re.compile('^[A-Z0-9]*(?::\d*){1,2}$')
+ASSOC_PAT = re.compile('^[A-Z0-9]*(?::\d*){1,2}$')
+PHANTOM_ASSOC_PAT = re.compile('^[A-Z0-9]*(?::[A-Z\-\d]*\?)$')
 
 
 A = TypeVar('A')
+B = TypeVar('B')
+C = TypeVar('C')
+
+
+def fnor(f1: Callable[[A], B], f2: Callable[[A], C], value: A) -> Union[B, C]:
+    """
+    Calling `fnor(f1, f2, value)` is equivalent to `f1(value) or f2(value)`
+    :param f1: the first function to try
+    :param f2: the second function to try
+    :param value: a value both f1 and f2 can accept
+    :return:
+    """
+    return f1(value) or f2(value)
 
 
 def rename_associations(mapping: Mapping[str, str], record: parser.Record) \
@@ -32,8 +46,9 @@ def rename_associations(mapping: Mapping[str, str], record: parser.Record) \
     :raises ValueError: if there are missing/malformed entries at any level,
     if the mapping is malformed or non-exhaustive.
     """
+    is_association = F(fnor, ASSOC_PAT.match, PHANTOM_ASSOC_PAT.match)
 
-    if not (F(map, association.match) >> all)(mapping.values()):
+    if not (F(map, is_association) >> all)(mapping.values()):
         raise ValueError(f'malformed association mapping for {record.protein}')
 
     def check_mut(mut: parser.Mutation) -> parser.Mutation:
