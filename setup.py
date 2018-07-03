@@ -4,9 +4,11 @@ setup(
     name='mutagen',
     version='',
     packages=['mutagen'],
+    scripts=['finalise.py'],
     url='',
     license='',
     author='ilia',
     author_email='',
-    description=''
+    description='',
+    install_requires=['fn', 'requests', 'click']
 )
